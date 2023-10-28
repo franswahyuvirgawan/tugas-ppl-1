@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
 import useUserStore from "../store/userStore";
 
 function Template({ api, metode }: { api: string; metode: string }) {
   const store = useUserStore();
-  const navigate = useNavigate();
   interface DataItem {
     id: number;
     number: number;
