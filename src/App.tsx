@@ -3,6 +3,7 @@ import Template from "./Pages/Template";
 import Daftar from "./Pages/Daftar";
 import Login from "./Pages/Login";
 import useUserStore from "./store/userStore";
+import NotFound from "./Pages/NotFound";
 
 function App() {
   const store = useUserStore();
@@ -42,6 +43,7 @@ function App() {
           }
         />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
