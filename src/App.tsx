@@ -14,8 +14,14 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Daftar />} />
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/"
+        element={store.userToken ? <Navigate to="/api" /> : <Daftar />}
+      />
+      <Route
+        path="/login"
+        element={store.userToken ? <Navigate to="/api" /> : <Login />}
+      />
       <Route element={<PrivateRoutes />}>
         <Route
           path="/plsql"
