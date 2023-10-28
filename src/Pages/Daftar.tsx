@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
+import { PuffLoader } from "react-spinners";
 
 const Daftar: React.FC = () => {
   const store = useUserStore();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const data = {
       nim: store.newNim,
@@ -23,6 +26,7 @@ const Daftar: React.FC = () => {
       if (response.ok) {
         // Berhasil melakukan sign up
         console.log("Sign up berhasil!");
+        setLoading(false);
         navigate("/login");
       } else {
         // Gagal melakukan sign up
@@ -34,7 +38,16 @@ const Daftar: React.FC = () => {
   };
 
   return (
-    <div className="text-xs flex justify-center flex-col items-center gap-[100px] ">
+    <div
+      className={`${
+        loading ? "h-screen" : ""
+      } text-xs flex justify-center flex-col items-center gap-[100px]`}
+    >
+      {loading && (
+        <div className="w-full absolute flex flex-row items-center justify-center bg-[#1D232A] h-screen bg-opacity-90">
+          <PuffLoader color="#fff" />
+        </div>
+      )}
       <form
         onSubmit={handleRegister}
         className="flex flex-col gap-[16px] h-screen justify-center items-center w-full md:w-[400px] px-[70px]"

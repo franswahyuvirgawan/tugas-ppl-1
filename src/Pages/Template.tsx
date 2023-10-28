@@ -51,7 +51,6 @@ function Template({ api, metode }: { api: string; metode: string }) {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-      navigate("/login");
     }
   };
 
@@ -93,9 +92,12 @@ function Template({ api, metode }: { api: string; metode: string }) {
 
   useEffect(() => {
     fetchData();
+  }, [api, urutan]);
+
+  useEffect(() => {
     fetchDataPerUser();
     fetchDataProses();
-  }, [api, urutan]);
+  }, [api]);
 
   function formatDate(inputDate: string): string {
     const date = new Date(inputDate);
@@ -141,11 +143,24 @@ function Template({ api, metode }: { api: string; metode: string }) {
     }
   };
 
-  console.log(loading);
+  const handleLogout = () => {
+    store.updateNewNim("");
+    store.updatenewPassword("");
+    store.updateNimLogin("");
+    store.updatePasswordLogin("");
+    store.updateUserToken("");
+  };
 
   return (
     <>
       <div className="px-[40px] text-xs flex justify-center flex-col items-center gap-[100px] py-[80px]">
+        <button
+          disabled={loading ? true : false}
+          className="btn btn-xs p-5 btn-primary flex flex-col items-center"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
         <div className="flex flex-col gap-6 items-center">
           <h1 className="lg:text-4xl text-2xl font-bold text-center">
             Program hitung akar kuadrat bilangan

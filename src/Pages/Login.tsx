@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
+import { PuffLoader } from "react-spinners";
 
 const Login: React.FC = () => {
   const store = useUserStore();
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const data = {
       nim: store.nimLogin,
@@ -26,6 +29,7 @@ const Login: React.FC = () => {
         const token = responseData.data.token;
         store.updateUserToken(token);
         navigate("/api");
+        setLoading(false);
       } else {
         setError(responseData?.msg);
       }
@@ -35,7 +39,16 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="text-xs flex justify-center flex-col items-center gap-[100px]">
+    <div
+      className={`${
+        loading ? "h-screen" : ""
+      } text-xs flex justify-center flex-col items-center gap-[100px]`}
+    >
+      {loading && (
+        <div className="w-full absolute flex flex-row items-center justify-center bg-[#1D232A] h-screen bg-opacity-90">
+          <PuffLoader color="#fff" />
+        </div>
+      )}
       <form
         onSubmit={handleRegister}
         className="flex flex-col gap-[16px] h-screen justify-center items-center w-full md:w-[400px] px-[70px]"
@@ -60,7 +73,7 @@ const Login: React.FC = () => {
         </button>
         <p className="text-red-500 text-center text-xs lg:text-sm">{error}</p>
         <p>
-          Belum punya akun?
+          Belum punya akun?{" "}
           <Link className="text-blue-500 underline" to="/">
             Daftar
           </Link>
