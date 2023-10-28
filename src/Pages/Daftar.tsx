@@ -31,9 +31,11 @@ const Daftar: React.FC = () => {
       } else {
         // Gagal melakukan sign up
         console.error("Gagal melakukan sign up.");
+        setLoading(false);
       }
     } catch (error) {
       console.error("Terjadi kesalahan saat melakukan sign up:", error);
+      setLoading(false);
     }
   };
 

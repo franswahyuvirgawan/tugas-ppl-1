@@ -32,9 +32,11 @@ const Login: React.FC = () => {
         setLoading(false);
       } else {
         setError(responseData?.msg);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Terjadi kesalahan saat melakukan sign in:", error);
+      setLoading(false);
     }
   };
 
@@ -44,10 +46,12 @@ const Login: React.FC = () => {
         loading ? "h-screen" : ""
       } text-xs flex justify-center flex-col items-center gap-[100px]`}
     >
-      {loading && (
+      {loading ? (
         <div className="w-full absolute flex flex-row items-center justify-center bg-[#1D232A] h-screen bg-opacity-90">
           <PuffLoader color="#fff" />
         </div>
+      ) : (
+        ""
       )}
       <form
         onSubmit={handleRegister}
