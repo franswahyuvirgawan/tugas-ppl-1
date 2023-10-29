@@ -258,7 +258,7 @@ function HitungAkar({ api, metode }: { api: string; metode: string }) {
               <tbody className="w-full">
                 {loading ? (
                   <tr>
-                    <td colSpan={5}>
+                    <td colSpan={6}>
                       <div className="w-full flex flex-row justify-center py-20">
                         <PuffLoader
                           color="#fff"
