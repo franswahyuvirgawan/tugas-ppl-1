@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
 import { PuffLoader } from "react-spinners";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const Daftar: React.FC = () => {
   const store = useUserStore();
@@ -16,26 +18,17 @@ const Daftar: React.FC = () => {
       password: store.newPassword,
     };
     try {
-      const response = await fetch("https://ppl2.onrender.com/auth/signup", {
-        method: "POST",
+      await axios.post("https://ppl2.onrender.com/auth/signup", data, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
       });
-      if (response.ok) {
-        // Berhasil melakukan sign up
-        console.log("Sign up berhasil!");
-        setLoading(false);
-        navigate("/login");
-      } else {
-        // Gagal melakukan sign up
-        console.error("Gagal melakukan sign up.");
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("Terjadi kesalahan saat melakukan sign up:", error);
+      console.log("Sign up berhasil!");
       setLoading(false);
+      navigate("/login");
+    } catch (error: any) {
+      setLoading(false);
+      toast.error(error.response.data.msg);
     }
   };
 
@@ -45,6 +38,7 @@ const Daftar: React.FC = () => {
         loading ? "h-screen" : ""
       } text-xs flex justify-center flex-col items-center gap-[100px]`}
     >
+      <Toaster position="top-center" reverseOrder={false} />
       {loading && (
         <div className="w-full absolute flex flex-row items-center justify-center bg-[#1D232A] h-screen bg-opacity-90">
           <PuffLoader color="#fff" />

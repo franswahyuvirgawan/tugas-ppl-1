@@ -4,14 +4,31 @@ import { Link } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
 import useUserStore from "../store/userStore";
 
-function Template({ api, metode }: { api: string; metode: string }) {
+function Template({
+  api,
+  metode,
+  apiPerUser,
+  apiProses,
+}: {
+  api: string;
+  metode: string;
+  apiPerUser: string;
+  apiProses: string;
+}) {
   const store = useUserStore();
+  interface UserData {
+    id: string;
+    nim: string;
+  }
+
   interface DataItem {
     id: number;
     number: number;
     result: number;
     time: number;
     createdAt: string;
+    userId: string;
+    user: UserData;
   }
 
   interface DataAllPerUser {
@@ -56,14 +73,11 @@ function Template({ api, metode }: { api: string; metode: string }) {
   const fetchDataProses = async () => {
     setLoadingProses(true);
     try {
-      const response = await axios.get<DataProses>(
-        "https://ppl2.onrender.com/process-api",
-        {
-          headers: {
-            Authorization: `Bearer ${store.userToken}`,
-          },
-        }
-      );
+      const response = await axios.get<DataProses>(apiProses, {
+        headers: {
+          Authorization: `Bearer ${store.userToken}`,
+        },
+      });
       setDataProses(response.data);
       setLoadingProses(false);
     } catch (error) {
@@ -74,14 +88,11 @@ function Template({ api, metode }: { api: string; metode: string }) {
   const fetchDataPerUser = async () => {
     setLoadingPerUser(true);
     try {
-      const response = await axios.get<DataAllPerUser[]>(
-        "https://ppl2.onrender.com/calculated-api-user",
-        {
-          headers: {
-            Authorization: `Bearer ${store.userToken}`, // Replace YOUR_TOKEN_HERE with your actual Bearer token
-          },
-        }
-      );
+      const response = await axios.get<DataAllPerUser[]>(apiPerUser, {
+        headers: {
+          Authorization: `Bearer ${store.userToken}`, // Replace YOUR_TOKEN_HERE with your actual Bearer token
+        },
+      });
       setDataAllPerUser(response.data);
       setLoadingPerUser(false);
     } catch (error) {
@@ -271,6 +282,14 @@ function Template({ api, metode }: { api: string; metode: string }) {
               >
                 <li>
                   <button
+                    onClick={() => setUrutan("")}
+                    className="text-xs lg:text-sm"
+                  >
+                    Default
+                  </button>
+                </li>
+                <li>
+                  <button
                     onClick={() => setUrutan("asc")}
                     className="text-xs lg:text-sm"
                   >
@@ -310,6 +329,7 @@ function Template({ api, metode }: { api: string; metode: string }) {
               <thead>
                 <tr>
                   <th>id</th>
+                  <th>NIM</th>
                   <th>Input</th>
                   <th>Hasil</th>
                   <th>Waktu (ms)</th>
@@ -333,6 +353,7 @@ function Template({ api, metode }: { api: string; metode: string }) {
                     {data?.map((item, index) => (
                       <tr key={index}>
                         <td>{item.id}</td>
+                        <td>{item.user.nim}</td>
                         <td>{item.number}</td>
                         <td>{formatDecimal(item.result)}</td>
                         <td>{item.time}</td>
