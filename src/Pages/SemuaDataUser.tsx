@@ -63,7 +63,7 @@ function SemuaDataUSer({ api, metode }: { api: string; metode: string }) {
     <>
       <div className="px-[40px] text-xs flex justify-center flex-col items-center gap-[60px]">
         <h1 className="lg:text-4xl text-2xl font-bold text-center">
-          Log perhitungan seluruh user
+          Log perhitungan
         </h1>
         {/* Log data all user */}
         <div className="flex flex-col w-[320px] lg:w-[800px] gap-[32px] items-center relative z-30">

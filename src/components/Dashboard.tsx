@@ -30,7 +30,7 @@ const Dashboard: React.FC = () => {
             Kelompok 22
           </Link>
         </div>
-        <div className="h-screen flex flex-col justify-center">
+        <div className="py-20">
           <Outlet />
         </div>
       </div>
