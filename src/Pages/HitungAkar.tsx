@@ -4,17 +4,7 @@ import { Link } from "react-router-dom";
 import { PuffLoader } from "react-spinners";
 import useUserStore from "../store/userStore";
 
-function Template({
-  api,
-  metode,
-  apiPerUser,
-  apiProses,
-}: {
-  api: string;
-  metode: string;
-  apiPerUser: string;
-  apiProses: string;
-}) {
+function HitungAkar({ api, metode }: { api: string; metode: string }) {
   const store = useUserStore();
   interface UserData {
     id: string;
@@ -31,29 +21,12 @@ function Template({
     user: UserData;
   }
 
-  interface DataAllPerUser {
-    nim: string;
-    count: number;
-  }
-
-  interface DataProses {
-    fastestProcessingTime: number;
-    slowestProcessingTime: number;
-    averageProcessingTime: number;
-  }
-
   const [data, setData] = useState<DataItem[] | null>(null);
-  const [dataProses, setDataProses] = useState<DataProses | null>(null);
-  const [dataAllPerUser, setDataAllPerUser] = useState<DataAllPerUser[] | null>(
-    null
-  );
   const [inputValue, setInputValue] = useState<string>("");
   const [responseErrors, setResponseErrors] = useState<string | null>(null);
   const [responseMessage, setResponseMessage] = useState<DataItem | null>(null);
   const [urutan, setUrutan] = useState<string>("asc");
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingProses, setLoadingProses] = useState<boolean>(false);
-  const [loadingPerUser, setLoadingPerUser] = useState<boolean>(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -70,44 +43,9 @@ function Template({
     }
   };
 
-  const fetchDataProses = async () => {
-    setLoadingProses(true);
-    try {
-      const response = await axios.get<DataProses>(apiProses, {
-        headers: {
-          Authorization: `Bearer ${store.userToken}`,
-        },
-      });
-      setDataProses(response.data);
-      setLoadingProses(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  const fetchDataPerUser = async () => {
-    setLoadingPerUser(true);
-    try {
-      const response = await axios.get<DataAllPerUser[]>(apiPerUser, {
-        headers: {
-          Authorization: `Bearer ${store.userToken}`, // Replace YOUR_TOKEN_HERE with your actual Bearer token
-        },
-      });
-      setDataAllPerUser(response.data);
-      setLoadingPerUser(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, [api, urutan]);
-
-  useEffect(() => {
-    fetchDataPerUser();
-    fetchDataProses();
-  }, [api]);
 
   function formatDate(inputDate: string): string {
     const date = new Date(inputDate);
@@ -144,8 +82,6 @@ function Template({
       setResponseMessage(response.data);
       setResponseErrors(null);
       fetchData();
-      fetchDataPerUser();
-      fetchDataProses();
       setLoading(false);
     } catch (error: any) {
       setResponseErrors(error.response.data.msg);
@@ -153,94 +89,9 @@ function Template({
     }
   };
 
-  const handleLogout = () => {
-    store.updateNewNim("");
-    store.updatenewPassword("");
-    store.updateNimLogin("");
-    store.updatePasswordLogin("");
-    store.updateUserToken("");
-  };
-
   return (
     <>
       <div className="px-[40px] text-xs flex justify-center flex-col items-center gap-[100px] pb-[80px]">
-        <div className="navbar bg-base-100 sticky top-0 z-40 py-4">
-          <div className="navbar-start">
-            <div className="dropdown">
-              <label tabIndex={0} className="btn btn-ghost lg:hidden">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h8m-8 6h16"
-                  />
-                </svg>
-              </label>
-              <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a>Item 1</a>
-                </li>
-                <li>
-                  <a>Parent</a>
-                  <ul className="p-2">
-                    <li>
-                      <a>Submenu 1</a>
-                    </li>
-                    <li>
-                      <a>Submenu 2</a>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <a>Item 3</a>
-                </li>
-              </ul>
-            </div>
-            <a className="btn btn-ghost normal-case text-lg">Kelompok 22</a>
-          </div>
-          <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1">
-              <li>
-                <a>Item 1</a>
-              </li>
-              <li tabIndex={0}>
-                <details>
-                  <summary>Parent</summary>
-                  <ul className="p-2">
-                    <li>
-                      <a>Submenu 1</a>
-                    </li>
-                    <li>
-                      <a>Submenu 2</a>
-                    </li>
-                  </ul>
-                </details>
-              </li>
-              <li>
-                <a>Item 3</a>
-              </li>
-            </ul>
-          </div>
-          <div className="navbar-end">
-            <button
-              disabled={loading ? true : false}
-              className="btn btn-xs p-5 btn-outline btn-error flex flex-col items-center lg:btn-base"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </div>
-        </div>
         <div className="flex flex-col gap-6 items-center">
           <h1 className="lg:text-4xl text-2xl font-bold text-center">
             Program hitung akar kuadrat bilangan
@@ -269,7 +120,6 @@ function Template({
             </ul>
           </div>
         </div>
-
         <div className="flex flex-col gap-[16px] w-[200px]">
           <div className="flex flex-col gap-[16px]">
             <input
@@ -303,7 +153,6 @@ function Template({
             </p>
           ) : null}
         </div>
-
         <div className="overflow-x-auto w-[320px] lg:w-[800px]">
           <table className="table table-pin-rows table-pin-cols table-zebra table-xs lg:table-md text-center">
             <thead>
@@ -332,7 +181,6 @@ function Template({
             </tbody>
           </table>
         </div>
-
         {/* Log data all user */}
         <div className="flex flex-col w-[320px] lg:w-[800px] gap-[32px] items-center relative z-30">
           <h1 className="font-bold text-center text-xl">
@@ -437,131 +285,9 @@ function Template({
             </table>
           </div>
         </div>
-
-        {/* Log data all user */}
-        <div className="flex flex-col w-[320px] lg:w-[800px] gap-[32px] items-center relative z-30">
-          <h1 className="font-bold text-center text-xl lg:w-full w-[300px]">
-            Log perhitungan jumlah total per user
-          </h1>
-
-          <div className="flex flex-row gap-2 items-center">
-            <button
-              disabled={loadingPerUser ? true : false}
-              className="btn btn-xs p-5 btn-primary flex flex-col items-center"
-              onClick={() => fetchDataPerUser()}
-            >
-              {loadingPerUser ? (
-                <div className="w-ful flex flex-row gap-2 items-center">
-                  <span className="text-white loading loading-spinner loading-xs"></span>{" "}
-                  Reload
-                </div>
-              ) : (
-                <div className="w-ful flex flex-row gap-2 items-center">
-                  Reload
-                </div>
-              )}
-            </button>
-          </div>
-
-          <div className="relative z-0 overflow-x-auto lg:w-[800px] w-full h-[280px] gap-[26px]">
-            <table className="table table-pin-rows table-pin-cols table-zebra table-xs lg:table-md text-center">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>NIM</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody className="w-full">
-                {loadingPerUser ? (
-                  <tr>
-                    <td colSpan={5}>
-                      <div className="w-full flex flex-row justify-center py-20">
-                        <PuffLoader
-                          color="#fff"
-                          // loading={loading}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  <>
-                    {dataAllPerUser?.map((item, index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{item.nim}</td>
-                        <td>{item.count}</td>
-                      </tr>
-                    ))}
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Log data proses */}
-        <div className="flex flex-col w-[320px] lg:w-[800px] gap-[32px] items-center relative z-30">
-          <h1 className="font-bold text-center text-xl lg:w-full w-[300px]">
-            Log data proses user
-          </h1>
-
-          <div className="flex flex-row gap-2 items-center">
-            <button
-              disabled={loadingProses ? true : false}
-              className="btn btn-xs p-5 btn-primary flex flex-col items-center"
-              onClick={() => fetchDataProses()}
-            >
-              {loadingProses ? (
-                <div className="w-ful flex flex-row gap-2 items-center">
-                  <span className="text-white loading loading-spinner loading-xs"></span>{" "}
-                  Reload
-                </div>
-              ) : (
-                <div className="w-ful flex flex-row gap-2 items-center">
-                  Reload
-                </div>
-              )}
-            </button>
-          </div>
-
-          <div className="relative z-0 overflow-x-auto lg:w-[800px] w-full gap-[26px]">
-            <table className="table table-pin-rows table-pin-cols table-zebra table-xs lg:table-md text-center">
-              <tbody className="w-full">
-                {loadingProses ? (
-                  <tr>
-                    <td colSpan={5}>
-                      <div className="w-full flex flex-row justify-center py-20">
-                        <PuffLoader
-                          color="#fff"
-                          // loading={loading}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  <>
-                    <tr>
-                      <th>Waktu Pemrosesan Tercepat</th>
-                      <td>{dataProses?.fastestProcessingTime}</td>
-                    </tr>
-                    <tr>
-                      <th>Waktu Pemrosesan Terlama</th>
-                      <td>{dataProses?.slowestProcessingTime}</td>
-                    </tr>
-                    <tr>
-                      <th>Rata-rata Waktu Pemrosesan</th>
-                      <td>{dataProses?.averageProcessingTime}</td>
-                    </tr>
-                  </>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </>
   );
 }
 
-export default Template;
+export default HitungAkar;

@@ -6,10 +6,6 @@ interface Store {
   updateNewNim: (newNim: string) => void;
   newPassword: string;
   updatenewPassword: (newPassword: string) => void;
-  nimLogin: string;
-  updateNimLogin: (nimLogin: string) => void;
-  passwordLogin: string;
-  updatePasswordLogin: (passwordLogin: string) => void;
   userToken: string;
   updateUserToken: (userToken: string) => void;
 }
@@ -22,10 +18,6 @@ const useUserStore = create<Store>()(
         updateNewNim: (newNim: string) => set({ newNim }),
         newPassword: "",
         updatenewPassword: (newPassword: string) => set({ newPassword }),
-        nimLogin: "",
-        updateNimLogin: (nimLogin: string) => set({ nimLogin }),
-        passwordLogin: "",
-        updatePasswordLogin: (passwordLogin: string) => set({ passwordLogin }),
         userToken: "",
         updateUserToken: (userToken: string) => set({ userToken }),
       }),

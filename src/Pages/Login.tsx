@@ -14,8 +14,8 @@ const Login: React.FC = () => {
     setLoading(true);
     e.preventDefault();
     const data = {
-      nim: store.nimLogin,
-      password: store.passwordLogin,
+      nim: store.newNim,
+      password: store.newPassword,
     };
 
     try {
@@ -58,16 +58,16 @@ const Login: React.FC = () => {
       >
         <h1 className="lg:text-4xl text-2xl font-bold">Login Akun</h1>
         <input
-          value={store.nimLogin}
-          onChange={(e) => store.updateNimLogin(e.target.value)}
+          value={store.newNim}
+          onChange={(e) => store.updateNewNim(e.target.value)}
           type="text"
           placeholder="Masukkan NIM"
           className="input input-xs h-11 input-bordered lg:w-full w-full"
         />
         <input
           type="password"
-          value={store.passwordLogin}
-          onChange={(e) => store.updatePasswordLogin(e.target.value)}
+          value={store.newPassword}
+          onChange={(e) => store.updatenewPassword(e.target.value)}
           placeholder="Masukkan Password"
           className="input input-xs h-11 input-bordered lg:w-full w-full"
         />
